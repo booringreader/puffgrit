@@ -1,16 +1,16 @@
-Clone the repo using 
-### `git clone https://github.com/booringreader/puffgrit.git \
-### cd puffgrit`
+```bash git clone https://github.com/booringreader/puffgrit.git 
+cd puffgrit ```
+
 
 run:
-### `npm start`
+```bash npm start```
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 
-### `npm test`
+```bash npm test```
 Launches the test runner in the interactive watch mode.\
 
-### `npm run build`
+```bash npm run build```
 Builds the app for production to the `build` folder.\
 The build is minified and the filenames include the hashes.\
