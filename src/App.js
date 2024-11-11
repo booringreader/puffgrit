@@ -1,7 +1,7 @@
-import './App.css';
+import Body from './components/Body';
 
 function App() {
-  return <div className="text-4xl border border-black w-fit p-4 rounded-lg m-20 text-red-700">media-server frontend-ish</div>
+  return <Body />
 }
 
 export default App;
