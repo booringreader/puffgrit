@@ -5,7 +5,8 @@ import {checkDataValidity} from '../utils/validate';
 
 const Login = () => {
     const [isSignInform, setisSignInform] = useState(true);
-    const email = useRef();
+    const [errorMessage, setErrorMessage] = useState();
+    const email = useRef(); 
     const password = useRef();
 
     const toggleSignIn = () => {
@@ -13,8 +14,8 @@ const Login = () => {
     }
     const handleButtonClick = () => {
         // validate the data
-        checkDataValidity(email.current.value);
-        checkDataValidity(password.current.value);
+        const message = checkDataValidity(email.current.value, password.current.value);
+        setErrorMessage(message)
     }
     return <div >
         <Header />
@@ -39,7 +40,6 @@ const Login = () => {
                 type="text"
                 placeholder="Email or Mobile no."
                 className="border-[1px] border-gray-100 bg-gray-800 bg-opacity-30 py-3 px-3 m-2 rounded-md w-full text-white" 
-                onClick={handleButtonClick}
             />
             <input
                 ref={password}
@@ -47,7 +47,8 @@ const Login = () => {
                 placeholder="Password"
                 className="border-[1px] border-gray-100 bg-gray-800 bg-opacity-30 py-5 m-2 px-3 rounded-md w-full text-white" 
             />
-            <button className="py-4 mb-10 m-2 bg-red-700 rounded-md w-full text-white">
+            <p className="text-red-600 mx-2 text-lg">{errorMessage}</p>
+            <button className="py-4 mb-10 m-2 bg-red-700 rounded-md w-full text-white" onClick={handleButtonClick}>
                 {
                     isSignInform ? "Sign In" : "Sign Up"
                 }

@@ -1,0 +1,6 @@
+### login page
+    - name validation (regex, state var)
+
+#### style components
+    - background
+    - logo
