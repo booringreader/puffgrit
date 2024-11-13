@@ -4,3 +4,6 @@
 #### style components
     - background
     - logo
+
+#### Reading material
+    - firebase docs
