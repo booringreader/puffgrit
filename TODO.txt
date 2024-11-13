@@ -1,5 +1,6 @@
 ### login page
     - name validation (regex, state var)
+    - add credentials to redux -> redirect to browse page
 
 #### style components
     - background
