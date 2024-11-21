@@ -1,9 +1,9 @@
-import { LOGO_URL, USER_ICON_URL } from '../utils/constants';
+import { LOGO_URL, USER_ICON_URL} from '../utils/constants';
 import {auth} from '../utils/firebase';
 import {signOut} from 'firebase/auth';
 import { useNavigate} from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useEffect, useDispatch, React } from 'react';
+import { useSelector, useDispatch} from 'react-redux';
+import { useEffect, React } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { addUser, removeUser } from '../utils/userSlice'
 
@@ -13,20 +13,29 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const handleSignOut = () => {
-    signOut(auth).then(() => {
-      navigate("/")
-    }).catch((error) => {
+    signOut(auth)
+      .then(() => {})
+      .catch((error) => {
       navigate("/error");
     });
-  }
+  };
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) { // signIn
         const { uid, email, displayName, photoURL} = user;
-        dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL}));
+        dispatch(
+          addUser({ 
+              uid: uid, 
+              email: email, 
+              displayName: displayName, 
+              photoURL: USER_ICON_URL,
+            })
+          );
+          navigate("/browse");
       } else { // signout 
         dispatch(removeUser()); // no arguments, since removerUser doesn't handle parameters inside
+        navigate("/");
       }
     });
   }, [])
@@ -36,7 +45,7 @@ const Header = () => {
        <img src={LOGO_URL} alt="logo" className="w-44"></img>
        
        { user && (
-        <div className="flex px-2">
+        <div className=" logo flex px-2">
         <img src={user.photoURL} alt="user icon" className="w-12 h-12 p-2" />
         <button className="rounded-lg text-white py-0 font-bold" onClick={handleSignOut}>Sign Out</button>
        </div>)

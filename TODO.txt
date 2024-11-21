@@ -13,9 +13,9 @@
 #### features
     - error handling component
     - restrict access after signout
-    - tmdb data fetch on browse page
 
 #### Reading material
     - firebase docs
     - redux toolkit docs
     - tmdb api docs
+    - useNavigate, useDispatch hooks

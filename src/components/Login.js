@@ -4,7 +4,6 @@ import { useState, useRef } from 'react'; // ! useRef is used to populate variab
 import { checkDataValidity } from '../utils/validate';
 import { auth } from '../utils/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile} from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
 
@@ -13,7 +12,6 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState();
     const email = useRef();
     const password = useRef();
-    const navigate = useNavigate();
     const name = useRef(null);
     const dispatch = useDispatch();
 
@@ -31,17 +29,24 @@ const Login = () => {
                 .then((userCredential) => {
                     const user = userCredential.user;
                     updateProfile(user, {
-                        displayName: name.current.value, photoURL: "https://avatars.githubusercontent.com/u/157519312?v=4"
-                    }).then(() => {
+                        displayName: name.current.value, 
+                        photoURL: "https://avatars.githubusercontent.com/u/157519312?v=4"
+                    })
+                    .then(() => {
                         // update the store once again (since photo and name do not appear in the store in the first try)
                         const { uid, email, displayName, photoURL} = auth.currentUser; // ! data shouldn't be fetched from the 'user' since it isn't updated yet
-                        dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL}));
-                        navigate("/browse")
-                    }).catch((error) => {
+                        dispatch(
+                            addUser({
+                                uid: uid, 
+                                email: email, 
+                                displayName: displayName, 
+                                photoURL: photoURL
+                            })
+                        );
+                    })
+                    .catch((error) => {
                         setErrorMessage(error.message);
                     });
-                    console.log(user);
-                    navigate("/browse"); // ? when signed in, navigate user to browse
                 })
                 .catch((error) => {
                     const errorcode = error.code;
@@ -52,8 +57,6 @@ const Login = () => {
             signInWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    console.log("signedIN")
-                    navigate("/browse") // ? when user signs out, navigate to main page
                 })
                 .catch((error) => {
                     const errorCode = error.code;
