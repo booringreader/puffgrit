@@ -1,13 +1,19 @@
 import Header from './Header';
 import { BG_URL } from '../utils/constants';
 import { useState, useRef } from 'react'; // ! useRef is used to populate variables with input data (or use useState() to change the value of variable directly)
-import {checkDataValidity} from '../utils/validate';
+import { checkDataValidity } from '../utils/validate';
+import { auth } from '../utils/firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile} from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
 
 const Login = () => {
     const [isSignInform, setisSignInform] = useState(true);
     const [errorMessage, setErrorMessage] = useState();
-    const email = useRef(); 
+    const email = useRef();
     const password = useRef();
+    const name = useRef(null);
+    const dispatch = useDispatch();
 
     const toggleSignIn = () => {
         setisSignInform(!isSignInform);
@@ -16,6 +22,48 @@ const Login = () => {
         // validate the data
         const message = checkDataValidity(email.current.value, password.current.value);
         setErrorMessage(message)
+        if (message) return;
+
+        if (!isSignInform) { // ? signUP form
+            createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    updateProfile(user, {
+                        displayName: name.current.value, 
+                        photoURL: "https://avatars.githubusercontent.com/u/157519312?v=4"
+                    })
+                    .then(() => {
+                        // update the store once again (since photo and name do not appear in the store in the first try)
+                        const { uid, email, displayName, photoURL} = auth.currentUser; // ! data shouldn't be fetched from the 'user' since it isn't updated yet
+                        dispatch(
+                            addUser({
+                                uid: uid, 
+                                email: email, 
+                                displayName: displayName, 
+                                photoURL: photoURL
+                            })
+                        );
+                    })
+                    .catch((error) => {
+                        setErrorMessage(error.message);
+                    });
+                })
+                .catch((error) => {
+                    const errorcode = error.code;
+                    const errormessage = error.message;
+                    setErrorMessage(errorcode + "-" + errormessage);
+                });
+        } else if (isSignInform) { // ? signIN form
+            signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    setErrorMessage(errorMessage)
+                });
+        }
     }
     return <div >
         <Header />
@@ -39,13 +87,13 @@ const Login = () => {
                 ref={email}
                 type="text"
                 placeholder="Email or Mobile no."
-                className="border-[1px] border-gray-100 bg-gray-800 bg-opacity-30 py-3 px-3 m-2 rounded-md w-full text-white" 
+                className="border-[1px] border-gray-100 bg-gray-800 bg-opacity-30 py-3 px-3 m-2 rounded-md w-full text-white"
             />
             <input
                 ref={password}
                 type="password"
                 placeholder="Password"
-                className="border-[1px] border-gray-100 bg-gray-800 bg-opacity-30 py-5 m-2 px-3 rounded-md w-full text-white" 
+                className="border-[1px] border-gray-100 bg-gray-800 bg-opacity-30 py-5 m-2 px-3 rounded-md w-full text-white"
             />
             <p className="text-red-600 mx-2 text-lg">{errorMessage}</p>
             <button className="py-4 mb-10 m-2 bg-red-700 rounded-md w-full text-white" onClick={handleButtonClick}>

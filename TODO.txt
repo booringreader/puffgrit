@@ -1,6 +1,21 @@
-### login page
+#### login page
     - name validation (regex, state var)
+    - add credentials to redux -> redirect to browse page
+    - logo
+
+#### errors
+    - display name on signUP | dispatch after the slice is updated
 
 #### style components
     - background
     - logo
+
+#### features
+    - error handling component
+    - restrict access after signout
+
+#### Reading material
+    - firebase docs
+    - redux toolkit docs
+    - tmdb api docs
+    - useNavigate, useDispatch hooks
