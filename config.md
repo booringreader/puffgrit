@@ -22,6 +22,9 @@
                 - create "movies" slice
                 - dispatch an action to add json data from tmdb api to slice
         - video playback + video title + video desc
+            - fetch data from the 'movies' store to display name and desc.
+            - pass in movie id to the tmdb 'Videos' API, and isolate 'type: trailer' from the results
+            - from type: trailer, extract key (youtube id)
         - video recommendations as cards
 
 
